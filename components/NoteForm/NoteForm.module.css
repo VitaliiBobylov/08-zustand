@@ -1,0 +1,55 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* основний відступ між полями */
+  padding: 16px; /* внутрішній відступ всередині модалки */
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 10px 12px; /* збільшені відступи всередині полів */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.textarea {
+  min-height: 120px; /* трохи вище textarea */
+  resize: vertical;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px; /* відступ між кнопками */
+  margin-top: 8px; /* невеликий відступ зверху */
+}
+
+.cancelButton,
+.createButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.cancelButton {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.cancelButton:hover {
+  background-color: #e2e2e2;
+}
+
+.createButton {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.createButton:hover {
+  background-color: #0b5ed7;
+}
