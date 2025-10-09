@@ -3,16 +3,49 @@ import { fetchNotes } from "@/lib/api";
 import getQueryClient from "@/lib/getQueryClient";
 import NotesClient from "./Notes.client";
 import SidebarNotes from "../@sidebar/SidebarNotes";
+import type { Metadata } from "next";
 
 interface NotesPageProps {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string[] }>;
 }
-export default async function NotesPage({ params }: NotesPageProps) {
+
+
+export async function generateMetadata({ params }: NotesPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const slugArray = resolvedParams?.slug ?? [];
   const tag = slugArray.length > 0 ? slugArray[0] : "All";
 
+  const title = `NoteHub – Фільтр: ${tag}`;
+  const description = `Перегляньте нотатки, відфільтровані за тегом "${tag}" у застосунку NoteHub.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://08-zustand-roan.vercel.app/notes/filter/${tag}`,
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+          alt: "NoteHub Notes Preview",
+        },
+      ],
+    },
+  };
+}
+
+
+export default async function NotesPage({ params }: NotesPageProps) {
+  const resolvedParams = await params;
+
+  const slugArray = resolvedParams?.slug ?? [];
+  const tag = slugArray.length > 0 ? slugArray[0] : "All";
+
   const queryClient = getQueryClient();
+
   await queryClient.prefetchQuery({
     queryKey: ["notes", { search: "", page: 1, tag }],
     queryFn: () => fetchNotes("", 1, tag),
@@ -23,7 +56,6 @@ export default async function NotesPage({ params }: NotesPageProps) {
   return (
     <div style={{ display: "flex", gap: "2rem" }}>
       <SidebarNotes />
-
       <div style={{ flex: 1 }}>
         <HydrationBoundary state={dehydratedState}>
           <NotesClient tag={tag} />
