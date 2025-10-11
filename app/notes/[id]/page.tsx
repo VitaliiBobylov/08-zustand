@@ -40,7 +40,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function NotePage({ params }: PageProps) {
+export default async function NoteModalPage({ params }: PageProps) {
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
