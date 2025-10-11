@@ -5,11 +5,7 @@ import { useNoteStore } from "@/lib/stores/noteStore";
 import type { Note } from "@/types/note";
 import css from "./NoteForm.module.css";
 
-interface NoteFormProps {
-  onClose: () => void;
-}
-
-export default function NoteForm({ onClose }: NoteFormProps) {
+export default function NoteForm() {
   const router = useRouter();
   const { draft, setDraft, clearDraft } = useNoteStore();
 
@@ -30,7 +26,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       if (!res.ok) throw new Error("Failed to create note");
 
       clearDraft();
-      onClose();
       router.back();
     } catch (err) {
       console.error("Error creating note:", err);
@@ -38,7 +33,13 @@ export default function NoteForm({ onClose }: NoteFormProps) {
   };
 
   return (
-    <form action={handleSubmit} className={css.form}>
+    <form
+      className={css.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }}
+    >
       <input
         type="text"
         name="title"

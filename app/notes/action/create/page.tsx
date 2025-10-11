@@ -21,12 +21,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CreateNote() {
+export default function CreateNotePage() {
   return (
     <main className={css.main}>
       <div className={css.container}>
         <h1 className={css.title}>Create note</h1>
-        <NoteForm onClose={() => {}} />
+        <NoteForm />
       </div>
     </main>
   );
