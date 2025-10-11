@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const tags = ["All", "Todo", "Work", "Personal", "Meeting", "Shopping"];
 
-export default function SidebarNotes() {
+export default function DefaultSidebar() {
   return (
     <aside>
       <nav>

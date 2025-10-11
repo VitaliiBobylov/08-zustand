@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import css from "./page.module.css";
 import Link from "next/link";
+import css from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "404 — Page not found | NoteHub",
@@ -26,9 +26,7 @@ export default function NotFound() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1 className={css.title}>404 - Page not found</h1>
-      <p className={css.description}>
-        Sorry, the page you are looking for does not exist.
-      </p>
+      <p className={css.description}>Сторінку, яку ви шукаєте, не знайдено.</p>
       <Link href="/">Go back home</Link>
     </div>
   );

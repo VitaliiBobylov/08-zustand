@@ -1,10 +1,8 @@
 "use client";
 
-import { FormEvent } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useCreateNote } from "@/lib/api";
-import { useDraftNoteStore } from "@/lib/stores/useDraftNoteStore";
-import type { CreateNotePayload, Note } from "@/types/note";
+import { useRouter } from "next/navigation";
+import { useNoteStore } from "@/lib/stores/noteStore";
+import type { Note } from "@/types/note";
 import css from "./NoteForm.module.css";
 
 interface NoteFormProps {
@@ -12,36 +10,41 @@ interface NoteFormProps {
 }
 
 export default function NoteForm({ onClose }: NoteFormProps) {
-  const { title, content, tag, setTitle, setContent, setTag, resetDraft } =
-    useDraftNoteStore();
+  const router = useRouter();
+  const { draft, setDraft, clearDraft } = useNoteStore();
 
-  const queryClient = useQueryClient();
-  const createNoteMutation = useCreateNote();
+  const handleSubmit = async (formData: FormData) => {
+    const payload = {
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+      tag: formData.get("tag") as Note["tag"],
+    };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    try {
+      const res = await fetch("/api/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!title.trim()) return;
+      if (!res.ok) throw new Error("Failed to create note");
 
-    const newNote: CreateNotePayload = { title, content, tag };
-
-    createNoteMutation.mutate(newNote, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["notes"] });
-        resetDraft();
-        onClose();
-      },
-    });
+      clearDraft();
+      onClose();
+      router.back();
+    } catch (err) {
+      console.error("Error creating note:", err);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={css.form}>
+    <form action={handleSubmit} className={css.form}>
       <input
         type="text"
         name="title"
         placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={draft.title}
+        onChange={(e) => setDraft({ ...draft, title: e.target.value })}
         className={css.input}
         required
         minLength={3}
@@ -51,16 +54,18 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       <textarea
         name="content"
         placeholder="Content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        value={draft.content}
+        onChange={(e) => setDraft({ ...draft, content: e.target.value })}
         className={css.textarea}
         maxLength={500}
       />
 
       <select
         name="tag"
-        value={tag}
-        onChange={(e) => setTag(e.target.value as Note["tag"])}
+        value={draft.tag}
+        onChange={(e) =>
+          setDraft({ ...draft, tag: e.target.value as Note["tag"] })
+        }
         className={css.select}
       >
         {["Todo", "Work", "Personal", "Meeting", "Shopping"].map((t) => (
@@ -71,7 +76,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       </select>
 
       <div className={css.actions}>
-        <button type="button" onClick={onClose}>
+        <button type="button" onClick={() => router.back()}>
           Cancel
         </button>
         <button type="submit">Create note</button>

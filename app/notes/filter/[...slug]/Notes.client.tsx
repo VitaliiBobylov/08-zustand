@@ -76,7 +76,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
       <div className={css.searchAndButton}>
         <SearchBox value={search} onChange={setSearch} />
 
-      
         <Link href="/notes/action/create" className={css.createButton}>
           Create Note +
         </Link>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import css from "./CreateNote.module.css";
 
-
 export const metadata: Metadata = {
   title: "Create Note — NoteHub",
   description: "Створіть нову нотатку в застосунку NoteHub.",
@@ -21,7 +20,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
 
 export default function CreateNote() {
   return (

@@ -2,15 +2,15 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import getQueryClient from "@/lib/getQueryClient";
 import NotesClient from "./Notes.client";
-import SidebarNotes from "../@sidebar/SidebarNotes";
 import type { Metadata } from "next";
 
 interface NotesPageProps {
   params: Promise<{ slug?: string[] }>;
 }
 
-
-export async function generateMetadata({ params }: NotesPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: NotesPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const slugArray = resolvedParams?.slug ?? [];
   const tag = slugArray.length > 0 ? slugArray[0] : "All";
@@ -37,10 +37,8 @@ export async function generateMetadata({ params }: NotesPageProps): Promise<Meta
   };
 }
 
-
 export default async function NotesPage({ params }: NotesPageProps) {
   const resolvedParams = await params;
-
   const slugArray = resolvedParams?.slug ?? [];
   const tag = slugArray.length > 0 ? slugArray[0] : "All";
 
@@ -54,13 +52,8 @@ export default async function NotesPage({ params }: NotesPageProps) {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <div style={{ display: "flex", gap: "2rem" }}>
-      <SidebarNotes />
-      <div style={{ flex: 1 }}>
-        <HydrationBoundary state={dehydratedState}>
-          <NotesClient tag={tag} />
-        </HydrationBoundary>
-      </div>
-    </div>
+    <HydrationBoundary state={dehydratedState}>
+      <NotesClient tag={tag} />
+    </HydrationBoundary>
   );
 }

@@ -5,7 +5,6 @@ import Footer from "@/components/Footer/Footer";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
 import { Roboto } from "next/font/google";
 
-
 const roboto = Roboto({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
@@ -22,14 +21,7 @@ export const metadata: Metadata = {
     description:
       "Організуйте свої нотатки швидко та ефективно за допомогою NoteHub.",
     url: "https://08-zustand-roan.vercel.app/",
-    images: [
-      {
-        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
-        width: 1200,
-        height: 630,
-        alt: "NoteHub preview image",
-      },
-    ],
+    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
     type: "website",
   },
 };

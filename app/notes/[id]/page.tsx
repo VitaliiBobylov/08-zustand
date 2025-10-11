@@ -4,21 +4,18 @@ import type { Metadata } from "next";
 import type { Note } from "@/types/note";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = params;
-
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
   const note: Note = await fetchNoteById(id);
 
-  const title = note?.title
-    ? `NoteHub – ${note.title}`
-    : "NoteHub – Нотатка";
-
-
+  const title = note?.title ? `NoteHub – ${note.title}` : "NoteHub – Нотатка";
   const description = note?.content
     ? note.content.slice(0, 150) + (note.content.length > 150 ? "..." : "")
     : "Перегляньте деталі цієї нотатки у NoteHub.";
@@ -38,12 +35,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           alt: "NoteHub Note Details",
         },
       ],
+      type: "website",
     },
   };
 }
 
+export default async function NotePage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
-export default function NotePage({ params }: PageProps) {
-  const { id } = params;
   return <NoteDetailsClient id={id} />;
 }

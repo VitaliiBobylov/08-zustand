@@ -1,10 +1,7 @@
-"use client";
-
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import type { Note } from "@/types/note";
 
-interface DraftNoteState {
+interface DraftNoteStore {
   title: string;
   content: string;
   tag: Note["tag"];
@@ -14,19 +11,12 @@ interface DraftNoteState {
   resetDraft: () => void;
 }
 
-export const useDraftNoteStore = create<DraftNoteState>()(
-  persist(
-    (set) => ({
-      title: "",
-      content: "",
-      tag: "Todo",
-      setTitle: (title) => set({ title }),
-      setContent: (content) => set({ content }),
-      setTag: (tag) => set({ tag }),
-      resetDraft: () => set({ title: "", content: "", tag: "Todo" }),
-    }),
-    {
-      name: "notehub-draft",
-    }
-  )
-);
+export const useDraftNoteStore = create<DraftNoteStore>((set) => ({
+  title: "",
+  content: "",
+  tag: "Todo",
+  setTitle: (title) => set({ title }),
+  setContent: (content) => set({ content }),
+  setTag: (tag) => set({ tag }),
+  resetDraft: () => set({ title: "", content: "", tag: "Todo" }),
+}));
